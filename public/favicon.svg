@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <style>
+    .bg { fill: #ece3cc; }
+    .fg { fill: #4a6fa5; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #050505; }
+      .fg { fill: #7fa3d9; }
+    }
+  </style>
+  <circle class="bg" cx="16" cy="16" r="16" />
+  <text
+    x="16"
+    y="17"
+    class="fg"
+    font-family="system-ui, sans-serif"
+    font-size="13"
+    font-weight="700"
+    text-anchor="middle"
+    dominant-baseline="middle"
+  >JO</text>
+</svg>
