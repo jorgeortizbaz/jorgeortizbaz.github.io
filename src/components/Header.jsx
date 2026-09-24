@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { useTheme } from '../context/ThemeContext';
 
@@ -18,19 +19,60 @@ function MoonIcon() {
   );
 }
 
+function MenuIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+      <path d="M4 6h16M4 12h16M4 18h16" />
+    </svg>
+  );
+}
+
+function CloseIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+      <path d="M6 6l12 12M18 6L6 18" />
+    </svg>
+  );
+}
+
 function Header() {
   const { lang, toggleLang, t } = useLanguage();
   const { theme, toggleTheme } = useTheme();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    setIsMenuOpen(false);
   };
+
+  const scrollToId = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+    setIsMenuOpen(false);
+  };
+
+  const navLinks = [
+    { id: 'hero', label: t.navAbout },
+    { id: 'skills', label: t.navSkills },
+    { id: 'experience', label: t.navExperience },
+    { id: 'education', label: t.navEducation },
+    { id: 'languages', label: t.navLanguages },
+    { id: 'rollstories', label: t.navProjects },
+    { id: 'contact', label: t.navContact },
+  ];
 
   return (
     <header className="site-header">
       <button className="site-header__name" onClick={scrollToTop}>
         {t.name}
       </button>
+
+      <nav className="site-header__nav">
+        {navLinks.map((link) => (
+          <button key={link.id} className="site-header__nav-link" onClick={() => scrollToId(link.id)}>
+            {link.label}
+          </button>
+        ))}
+      </nav>
 
       <div className="site-header__controls">
         <button
@@ -51,7 +93,45 @@ function Header() {
           <span className="site-header__theme-knob" />
           <MoonIcon />
         </button>
+
+        <button
+          className="site-header__hamburger"
+          onClick={() => setIsMenuOpen((prev) => !prev)}
+          aria-label={isMenuOpen ? t.menuCloseLabel : t.menuOpenLabel}
+          aria-expanded={isMenuOpen}
+        >
+          {isMenuOpen ? <CloseIcon /> : <MenuIcon />}
+        </button>
       </div>
+
+      {isMenuOpen && (
+        <div className="site-header__mobile-menu">
+          <nav className="site-header__mobile-nav">
+            {navLinks.map((link) => (
+              <button key={link.id} className="site-header__mobile-nav-link" onClick={() => scrollToId(link.id)}>
+                {link.label}
+              </button>
+            ))}
+          </nav>
+
+          <div className="site-header__mobile-controls">
+            <button className="site-header__lang" onClick={toggleLang} aria-label={t.langButtonLabel}>
+              {lang === 'es' ? 'EN' : 'ES'}
+            </button>
+
+            <button
+              className="site-header__theme-switch"
+              onClick={toggleTheme}
+              aria-label={t.themeButtonLabel}
+              data-theme-active={theme}
+            >
+              <SunIcon />
+              <span className="site-header__theme-knob" />
+              <MoonIcon />
+            </button>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
